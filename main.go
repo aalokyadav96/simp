@@ -10,7 +10,7 @@ import (
 
 var tmpl = template.Must(template.ParseGlob("templates/*.html"))
 
-const maxUploadSize = 10 * 1024 * 1024 // 8 mb
+const maxUploadSize = 10 * 1024 * 1024 // 10 mb
 const uploadPath = "./uploads"
 const streamPath = "./cmp"
 
@@ -49,16 +49,10 @@ func main() {
 
 
 	log.Println("Starting Server")
-    log.Fatal(http.ListenAndServe("localhost:4000", router))
+    log.Fatal(http.ListenAndServe(":4000", router))
 }
 
 func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	tmpl.ExecuteTemplate(w,"head.html",nil)
 	tmpl.ExecuteTemplate(w,"index.html",nil)
 }
-
-//~ func Hello() httprouter.Handle {
-    //~ return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-        //~ fmt.Fprintf(w, "hello, %s!\n", ps.ByName("name"))
-    //~ }
-//~ }
