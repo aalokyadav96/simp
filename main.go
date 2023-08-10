@@ -20,7 +20,7 @@ func main() {
     router := httprouter.New()
     router.GET("/", Index)
 
-	router.GET("/search", Index)
+	router.GET("/search", Search)
 
 	router.GET("/login", loginHandler)
     router.POST("/login", loginHandler)

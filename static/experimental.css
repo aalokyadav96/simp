@@ -142,7 +142,7 @@ textarea {
 }
 .inp, input[type=file] {
     outline: none;
-    padding: 1rem;
+    padding: 0.4rem;
     width: 100%;
     -webkit-appearance: none;
     font-family: inherit;
@@ -158,7 +158,7 @@ input[type=submit], button[type=submit] {
     max-width: 50%;
     -webkit-appearance: none;
     font-family: inherit;
-    font-size: 120%;
+    font-size: 100%;
     margin: 0.3rem 0;
     border: 1px solid #ccc;
     border-radius: 4px;

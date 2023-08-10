@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"time"
+	"strings"
 	"os/exec"
 	"crypto/rand"
 	rndm "math/rand"
@@ -15,6 +16,17 @@ import (
 
     "github.com/julienschmidt/httprouter"
 )
+
+// Gif - We will be using this Gif type to perform crud operations
+type GIF struct {
+	Title  string
+	Author string
+	Tags   string
+	Date   string
+	URL    string
+	Views  int
+	Likes  int
+}
 
 
 func HasAuthCookie(next httprouter.Handle) httprouter.Handle {
@@ -36,7 +48,11 @@ func ViewUser() httprouter.Handle {
 
 func Me() httprouter.Handle {
     return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-        fmt.Fprintf(w, "meme")
+		cookie, err := r.Cookie("exampleCookie")
+		if err != nil {
+			fmt.Fprintf(w,"MeMe")
+		}
+		fmt.Fprintf(w,cookie.Value)
     }
 }
 
@@ -63,9 +79,13 @@ func UploadFileHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Para
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 			}
-
 			defer file.Close()
 			log.Println("file OK")
+		
+			fmt.Println(r.FormValue("title"))
+			for _,v := range strings.Split(r.FormValue("tags"),",") {
+			fmt.Println(v)}
+	
 			// Get and print out file size
 			fileSize := fileHeader.Size
 			fmt.Printf("File size (bytes): %v\n", fileSize)
@@ -173,6 +193,10 @@ func DeleteFile(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		os.Remove(streamPath + "/" + fileName[:len(fileName)-len(filepath.Ext(fileName))] + ".mp4")
 		XHRrespond(w, "Deleted")
 	}
+}
+
+func Search(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	fmt.Fprintf(w,r.URL.Query().Get("q"))
 }
 
 func SearchFiles(dir string) []string {
