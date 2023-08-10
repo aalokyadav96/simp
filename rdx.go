@@ -10,7 +10,7 @@ import (
 
 
 var conn = gredis.NewClient(&gredis.Options{
-	Addr:     "localhost:6379",
+	Addr:     "redis://red-cj5qk4geba7s7387j9c0:6379",
 	Password: "", // no password set
 	DB:       0,  // use default DB
 })
