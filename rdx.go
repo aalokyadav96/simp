@@ -12,7 +12,7 @@ import (
 
 func init() {
 	conn = gredis.NewClient(&gredis.Options{
-		Addr:         ":6379",
+		Addr:         "redis://red-cj5qk4geba7s7387j9c0:6379",
 	})
 }
 var opt, _ = gredis.ParseURL(os.Getenv("rdx"))
