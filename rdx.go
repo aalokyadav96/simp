@@ -1,22 +1,19 @@
 package main
+
 import (
 	"context"
 	"fmt"
 	"log"
-	"os"
 
 	gredis "github.com/redis/go-redis/v9"
 )
 
-//var conn *gredis.Client
 
-func init() {
-	conn = gredis.NewClient(&gredis.Options{
-		Addr:         "redis://red-cj5qk4geba7s7387j9c0:6379",
-	})
-}
-var opt, _ = gredis.ParseURL(os.Getenv("rdx"))
-var conn = gredis.NewClient(opt)
+var conn = gredis.NewClient(&gredis.Options{
+	Addr:     "localhost:6379",
+	Password: "", // no password set
+	DB:       0,  // use default DB
+})
 
 
 func init() {
