@@ -26,17 +26,17 @@ func main() {
     router.POST("/login", loginHandler)
     router.GET("/register", registerHandler)
     router.POST("/register", registerHandler)
-    router.POST("/logout", logoutHandler)
+    router.POST("/logout", HasAuthCookie(logoutHandler))
 
 	//~ router.GET("/hello/:name", Hello)
     router.GET("/@:name", HasAuthCookie(ViewUser()))
     router.GET("/me", HasAuthCookie(Me()))
 	
-	router.GET("/upload", UploadFileHandler)
-	router.POST("/upload", UploadFileHandler)
+	router.GET("/upload", HasAuthCookie(UploadFileHandler))
+	router.POST("/upload", HasAuthCookie(UploadFileHandler))
 	router.GET("/v/:PostId", ViewPost)
-	router.GET("/viewall", ViewAllFiles)
-	router.DELETE("/del/:PostId", DeleteFile)
+	router.GET("/viewall", HasAuthCookie(ViewAllFiles))
+	router.DELETE("/del/:PostId", HasAuthCookie(DeleteFile))
 	
 	router.GET("/favicon.ico", Ignore)
 	
@@ -45,6 +45,7 @@ func main() {
 	static.ServeFiles("/giant/*filepath", http.Dir(uploadPath))
 	static.ServeFiles("/userpic/*filepath", http.Dir(userpicPath))
 	router.ServeFiles("/static/*filepath", http.Dir("static"))
+//	router.ServeFiles("/assets/*filepath", http.Dir("assets"))
 	router.NotFound = static
 
 

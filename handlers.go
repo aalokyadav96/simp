@@ -35,7 +35,7 @@ func HasAuthCookie(next httprouter.Handle) httprouter.Handle {
 			next(w, r, ps)
 		} else {
 			fmt.Println("nah")
-			fmt.Fprintf(w,"nah")
+			tmpl.ExecuteTemplate(w, "nonloginhome.html", nil)
 		}
 	}
 }
@@ -58,13 +58,10 @@ func Me() httprouter.Handle {
 
 
 func UploadFileHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	if !isLoggedIn(w,r) {
-		tmpl.ExecuteTemplate(w, "head.html", nil)
-		tmpl.ExecuteTemplate(w, "nonloginhome.html", nil)
-	} else if r.Method == "GET" && isLoggedIn(w,r) {
+	if r.Method == "GET" {
 		tmpl.ExecuteTemplate(w, "head.html", nil)
 		tmpl.ExecuteTemplate(w, "upload.html", nil)
-	} else if r.Method == "POST" && isLoggedIn(w,r) {
+	} else if r.Method == "POST" {
 		if err := r.ParseMultipartForm(maxUploadSize); err != nil {
 			fmt.Printf("Could not parse multipart form: %v\n", err)
 			renderError(w, "CANT_PARSE_FORM", http.StatusInternalServerError)
@@ -81,11 +78,10 @@ func UploadFileHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Para
 			}
 			defer file.Close()
 			log.Println("file OK")
-		
-			fmt.Println(r.FormValue("title"))
-			for _,v := range strings.Split(r.FormValue("tags"),",") {
-			fmt.Println(v)}
-	
+		    cookie, _ := r.Cookie("exampleCookie")
+			cook := cookie.Value
+			title := r.FormValue("title")
+			tags := r.FormValue("tags")
 			// Get and print out file size
 			fileSize := fileHeader.Size
 			fmt.Printf("File size (bytes): %v\n", fileSize)
@@ -135,6 +131,11 @@ func UploadFileHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Para
 			}
 			//			ffmpeg -i %1 -filter:v scale=-2:640:flags=lanczos -c:a copy -pix_fmt yuv420p %1_lcz.mp4
 			go FFConvert(fileName , fileEndings )
+	//			var gif Gif{Title: , Author: , Tags: , Date: , URL: , Views: , Likes: }
+			t := time.Now()
+			var newstr string = title+":::"+tags+":::"+cook+":::"+string(t.Format("2006-01-02"))
+			rdxHset("gif",fileName,newstr)
+			
 			http.Redirect(w, r, "/v/"+fileName, http.StatusSeeOther)
 			}
 			
@@ -173,7 +174,10 @@ func FFConvert(fileName string, fileEndings string) {
 func ViewPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	if r.Method == "GET" {
 		fmt.Println(r.URL.Path)
-		tmpl.ExecuteTemplate(w, "show.html", ps.ByName("PostId"))
+		res,_ := rdxHget("gif",ps.ByName("PostId"))
+		arr := strings.Split(res,":::")
+		var gif = GIF{Title: arr[0], Author: arr[2], Tags: arr[1], Date: arr[3], URL: ps.ByName("PostId")}
+		tmpl.ExecuteTemplate(w, "show.html", gif)
 	}
 }
 
