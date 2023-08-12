@@ -8,7 +8,7 @@ import (
 	gredis "github.com/redis/go-redis/v9"
 )
 
-var conn *gredis.Client
+//var conn *gredis.Client
 
 func init() {
 	conn = gredis.NewClient(&gredis.Options{
