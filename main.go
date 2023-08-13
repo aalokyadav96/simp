@@ -18,7 +18,7 @@ var userpicPath = "./userpic"
 
 func main() {
     router := httprouter.New()
-    router.GET("/", Index)
+    router.GET("/", HasAuthCookie(UploadFileHandler))
 
 	router.GET("/search", Search)
 
@@ -50,7 +50,7 @@ func main() {
 
 
 	log.Println("Starting Server")
-    log.Fatal(http.ListenAndServe(":4000", router))
+    log.Fatal(http.ListenAndServe("localhost:4000", router))
 }
 
 func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {

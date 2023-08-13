@@ -28,6 +28,7 @@ type GIF struct {
 	Likes  int
 }
 
+type void struct{}
 
 func HasAuthCookie(next httprouter.Handle) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {

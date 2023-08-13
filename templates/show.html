@@ -1,7 +1,11 @@
 {{template "head"}}
 {{template "header"}}
+
+
+
      
 		<main>
+		<section class="content">
 				<video id="mainVid" autoplay width="320" height="480" preload="metadata" loop poster="#" class="hvideo">
 					<source src="/files/{{.URL}}.mp4#t=0.01" type="video/mp4">
 					<source src="/files/{{.URL}}.webm#t=0.01" type="video/webm">
@@ -9,31 +13,237 @@
 					Your browser does not support the video tag.
 				</video>
 				<div onclick='playMe()' class="overly"></div>
-				<!--input type="range" min="0" max="100" value="0" class="slider" id="progress">
-			<div id="status" >
-				<span id="curTime" class="afters" title="Current time"></span> / <span class="afters" id="vLen"></span><br />
-			</div-->
-				<!--span id="curSpeed"></span><br-->
-				<!--Remaining time: <span id="vRemaining" title="Remaining time"></span-->
-		<div class="buttonbar">
-        <button  onclick='slower()' id="slower" class="sqrBtn" title="Slower playback">&#10134;</button>  
-        <button  onclick='resetSpeed()' id="normal" class="sqrBtn" title="Reset playback rate">&#9868;</button> 
-        <button  onclick='faster()' id="faster" class="sqrBtn" title="Faster playback">&#10133;</button> 
-		<button class="sqrBtn" id="mute" title="Mute button" >&#128263;</button> 
-		<button class="saveBtn" id="share" title="Share button" value="/v/{{.URL}}" onclick="navigator.clipboard.writeText(window.location.href);mySnack('copied URL to share');">Share</button> 
+			</section>
+		<section class="content">
+			<div class="player-controls">
+                <div class="play-duration">
+                    <div class="play-duration-bar"></div>
+                </div>
+				<div class="buttonbar">
+                <button onclick='slower()' id="slower" class="sqrBtn btn">&#10134;</button>
+                <button onclick='resetSpeed()' id="normal" class="sqrBtn btn">&#9868;</button>
+                <button  onclick='faster()' id="faster" class="sqrBtn btn" >&#10133;</button>
+                <button  onclick='mute()' id="mute" class="sqrBtn btn" >&#128263;</button>
+                <button class="saveBtn  btn" id="share" title="Share button" value="/v/{{.URL}}" onclick="navigator.clipboard.writeText(window.location.href);mySnack('copied URL to share');">Share</button>
+				</div>
+            </div>
+			</section>
+                <!--button class="btn play-video">
+                    <svg height="100%" version="1.1" viewBox="0 0 36 36" width="100%" style="pointer-events: none">>
+                        <path fill="white" d="M 12,26 18.5,22 18.5,14 12,10 z M 18.5,22 25,18 25,18 18.5,14 z" ></path>
+                    </svg>
+                </button>
+                <button id="pause-video" class="btn btn">
+                    <svg height="100%" version="1.1" viewBox="0 0 36 36" width="100%" style="pointer-events: none">>
+                        <path fill="white" d="M 12,26 16,26 16,10 12,10 z M 21,26 25,26 25,10 21,10 z"></path>
+                    </svg>
+                </button-->
 		<!--button class="sqrBtn" id="report" title="Report" >&#9872;</button>
 		<form id="panda" method="post">
 			<input class="saveBtn" type="button" onclick='AddToColl("saved",{{.}})' value="Save"/>
 		</form-->
-		</div>
-		</main>
-		<h4>Title : {{.Title}}</h4>
-		<p>Author : {{.Author}}</p>
-		<span>Tags : {{.Tags}}</span><br>
-		<time>Date : {{.Date}}</time><br>
-		<span>Likes : {{.Likes}}</span><br>
-		<span>Views : {{.Views}}</span>
+		
 	<br />
+	<div class="block-3">
+   <div class="gif-info">
+      <h1 class="title">{{.Title}}</h1>
+      <div class="gif-views">{{.Views}} views</div>
+      <span class="divider">|</span>
+      <div class="gif-created">Created {{.Date}}</div>
+      <div class="tags-list-wrapper">
+         <div class="tag-list"><a class="filled-button tag-button small" href="/gifs/search/l9efq1g5va0">{{.Tags}}</a></div>
+      </div>
+   </div>
+   <div class="gif-share">
+      <button class="square-icon-outlined-button share-button with-tooltip fb" type="button" data-tooltip="Facebook">
+         <span class="SVGInline ic ic-social-share">
+            <svg class="SVGInline-svg ic-svg ic-social-share-svg" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.414">
+               <path d="M19.986 27.6h-3.725v-9.001H14.4v-3.102h1.861v-1.861c0-2.531 1.05-4.036 4.037-4.036h2.485v3.103H21.23c-1.161 0-1.238.433-1.238 1.242l-.006 1.552H22.8l-.33 3.102h-2.485V27.6h.001z"></path>
+            </svg>
+         </span>
+      </button>
+      <button class="square-icon-outlined-button share-button with-tooltip tw" type="button" data-tooltip="Twitter">
+         <span class="SVGInline ic ic-social-share">
+            <svg class="SVGInline-svg ic-svg ic-social-share-svg" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.414">
+               <path d="M24.421 13.076a3.61 3.61 0 0 0 1.515-2.01 6.7 6.7 0 0 1-2.19.882A3.355 3.355 0 0 0 21.23 10.8c-1.903 0-3.445 1.627-3.445 3.635 0 .285.029.563.088.828-2.863-.153-5.403-1.597-7.103-3.798a3.77 3.77 0 0 0-.467 1.827c0 1.262.609 2.374 1.534 3.027a3.32 3.32 0 0 1-1.563-.454v.045c0 1.761 1.187 3.231 2.766 3.564a3.284 3.284 0 0 1-1.556.064c.437 1.443 1.71 2.495 3.22 2.523A6.693 6.693 0 0 1 9.6 23.567a9.397 9.397 0 0 0 5.284 1.633c6.34 0 9.805-5.54 9.805-10.343 0-.158-.001-.315-.009-.47a7.202 7.202 0 0 0 1.72-1.883 6.609 6.609 0 0 1-1.979.572z"></path>
+            </svg>
+         </span>
+      </button>
+      <button class="square-icon-outlined-button share-button with-tooltip reddit" type="button" data-tooltip="Reddit">
+         <span class="SVGInline ic ic-social-share">
+            <svg class="SVGInline-svg ic-svg ic-social-share-svg" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.414">
+               <path d="M27.986 18.114c0-1.398-1.1-2.497-2.497-2.497-.599 0-1.198.2-1.597.6-1.498-.899-3.296-1.498-5.393-1.599l1.099-3.993 3.395.998a1.997 1.997 0 1 0 1.997-1.997c-.699 0-1.398.4-1.697.999l-3.995-.999c-.3-.1-.5.1-.599.4L17.5 14.618c-1.996.101-3.894.7-5.391 1.599-.4-.4-.999-.6-1.599-.6a2.472 2.472 0 0 0-2.496 2.497c0 .899.4 1.597 1.098 2.096l-.1.9c0 3.594 3.996 6.49 8.988 6.49 4.993 0 8.986-2.896 8.986-6.49l-.1-.9c.7-.499 1.1-1.197 1.1-2.096zm-12.982.299c.699 0 1.198.6 1.198 1.199 0 .598-.5 1.198-1.198 1.198-.7 0-1.198-.5-1.198-1.198 0-.7.499-1.2 1.198-1.2zm6.79 5.393c-1.796 1.098-5.791 1.098-7.589 0-.199-.2-.299-.5-.1-.7.2-.2.5-.299.699-.1 1.199.9 5.194.9 6.391 0 .2-.199.5-.1.7.1.199.2.1.5-.101.7zm-.798-2.996c-.7 0-1.199-.6-1.199-1.198 0-.7.599-1.2 1.199-1.2.698 0 1.198.6 1.198 1.2 0 .698-.5 1.198-1.198 1.198z" fill-rule="nonzero"></path>
+            </svg>
+         </span>
+      </button>
+      <button class="square-icon-outlined-button copy-link share-button with-tooltip" type="button" data-tooltip="Copy">
+         <span class="SVGInline ic">
+            <svg class="SVGInline-svg ic-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.414">
+               <path d="M10.932 13.068a.736.736 0 0 1 0 1.075.762.762 0 0 1-1.075 0 3.789 3.789 0 0 1 0-5.354l2.681-2.681a3.789 3.789 0 0 1 5.354 0 3.789 3.789 0 0 1 0 5.354l-1.128 1.129a5.249 5.249 0 0 0-.303-1.833l.356-.364a2.257 2.257 0 0 0 0-3.211 2.257 2.257 0 0 0-3.211 0l-2.674 2.674a2.257 2.257 0 0 0 0 3.211zm2.136-3.211a.762.762 0 0 1 1.075 0 3.789 3.789 0 0 1 0 5.354l-2.681 2.681a3.789 3.789 0 0 1-5.354 0 3.789 3.789 0 0 1 0-5.354l1.128-1.129a5.323 5.323 0 0 0 .303 1.841l-.356.356a2.257 2.257 0 0 0 0 3.211 2.257 2.257 0 0 0 3.211 0l2.674-2.674a2.257 2.257 0 0 0 0-3.211.736.736 0 0 1 0-1.075z"></path>
+            </svg>
+         </span>
+      </button>
+      <button class="square-icon-outlined-button share-button open-embed-button with-tooltip" type="button" data-tooltip="Embed">
+         <span class="SVGInline ic ic-send">
+            <svg class="SVGInline-svg ic-svg ic-send-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.414">
+               <path d="M14.6 16.6l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4zm-5.2 0L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4z"></path>
+            </svg>
+         </span>
+      </button>
+      <button class="square-icon-outlined-button share-button open-share-button with-tooltip" type="button" data-tooltip="More share options">
+         <span class="SVGInline ic ic-send">
+            <svg class="SVGInline-svg ic-svg ic-send-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.414">
+               <path d="M11.635 19.478L21.5 4.522l-19 3.705 2.393 3.584 12.549-4.807-13.787 8.538 4.786-.565 3.194 4.5z"></path>
+            </svg>
+         </span>
+      </button>
+   </div>
+   <div class="user-info">
+      <div class="user-row">
+         <a class="profile-info-overview" href="/@ellygator">
+            <div class="profile-image small">
+               <div class="image" style="background-image: url(&quot;/userpic/userpic.png&quot;);"></div>
+            </div>
+            <div class="profile-name has-name">
+               <div class="name-wrapper"><span class="name">{{.Author}}</span></div>
+               <span class="userid">@{{.Author}}</span>
+            </div>
+         </a>
+      </div>
+      <div class="profile-stat"><span class="datum views"><span class="value">623.8K</span>&nbsp;total GIF views</span><span class="followers"><span class="datum"><span class="value">31</span>&nbsp;followers</span></span><span class="following"><span class="datum"><span class="value">23</span>&nbsp;following</span></span></div>
+   </div>
+</div>
+<div id="snackbar"></div>
+
+
+		</main>
+<script>
+var QS = function (el) {
+    return document.querySelector(el);
+};
+
+var durationBar = QS('.play-duration-bar');
+
+QS('#mainVid').addEventListener('timeupdate', function (e) {
+
+    var total = ((e.target.currentTime / e.target.duration) * 100);
+
+    durationBar.style.width = total + '%';
+})
+
+QS('.play-duration').addEventListener('mousedown', function (e) {
+
+    var rect = e.currentTarget.getBoundingClientRect(),
+        offsetX = e.clientX - rect.left,
+        offsetY = e.clientY - rect.top;
+
+    var fraction = (offsetX / e.currentTarget.clientWidth);
+
+    var video = QS('#mainVid');
+
+    video.currentTime = video.duration *  fraction;
+
+    //durationBar.style.width = (fraction * 100) + '%';
+});
+</script>
+</body>
+<style>
+*, *::after, *::before{
+    box-sizing: border-box;
+}
+.player{
+   padding: 0;
+   margin: 0;
+   display: flex;
+   flex-direction: column;
+   width: 100%;
+   height: 100%;
+}
+
+.player .player-header > p{
+    margin: 5px 0;
+    font-size: 12px;
+}
+.player video{
+}
+
+.player .video-wrapper {
+    position: relative;
+    height: 100%;
+    background-color: #00b630;
+}
+
+.player .video-wrapper .video-overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.player .player-controls{
+    position: fixed;
+    bottom: 0;
+    text-align: center;
+    opacity: .1;
+    width: 100%;
+    left: 0;
+    padding: 0;
+    transition: all .2s linear;
+}
+
+ .player:hover .player-controls {
+     opacity: 1;
+     background-color: rgba(0, 0, 0, .9);
+ }
+
+ .play-duration {
+    height: 10px;
+    width: 100%;
+    background-color: rgba(255, 255, 255, .2);
+    position: relative;
+    margin: 15px 0;
+    cursor: pointer;
+ }
+
+ .play-duration .play-duration-bar{
+    background-color: #00b630;
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0;
+ }
+
+.btn{
+    background-color: #00b630;
+    border: none;
+    padding: 5px;
+    color: white;
+    font-size: 15px;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.btn.btn-lg{
+    width: 80px;
+    height: 80px;
+    font-size: 25px;
+}
+
+.btn:active{
+    transform: translateY(2px);
+}
+</style>
 	<script>/*
 		const progress = document.getElementById("progress");
 		video = document.getElementById("mainVid");
@@ -218,8 +428,3 @@ function mySnack(msg) {
   setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 }
 </script>
-
-<div id="snackbar"></div>
-
-
-

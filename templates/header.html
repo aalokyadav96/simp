@@ -24,10 +24,14 @@
   </header>
   
 	<script>
-	function showLogout() {
-		lg = document.getElementById("logout");
-		lg.style.display = "block";
-	}
+function showLogout() {
+  var x = document.getElementById("logout");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
 	</script>
 
 {{end}}
