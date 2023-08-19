@@ -19,14 +19,14 @@ function myFunction(){
         txt += "<article class='filePreviewCon'><section class='filedesc' ><strong>" + (i+1) + ". </strong><br>";
         var file = x.files[i];
         if ('name' in file) {
-          txt += "<span>Name: </span><input class='inp' type='text' name='title' value='" + removeExtension(file.name) + "'><br><span>Tags: </span><input class='inp' id='inp' type='text' onfocus='getTags(this.value);' name='tags' value='' onfocusout='getTags(this.value)'><br>";
+          txt += "<span>Name: </span><br><input class='inp' type='text' name='title' value='" + removeExtension(file.name) + "'><br><span>Tags: </span><br><input class='inp' id='inp' type='text' onfocus='getTags(this.value);' name='tags' value='' onfocusout='getTags(this.value)'><br>";
         }
         if ('size' in file) {
 		if (file.size > 10*1024*1024) {
 			window.alert("Size too big, select file smaller than 10 MB");
 			x.files.splice(i, 1);
 		} else {
-			txt += "size: " + formatBytes(file.size) + " bytes <br><input type='submit' value='Submit'/><br></section><video onmouseover='this.play();' onmouseout='this.pause();' onclick='playMe(this)' class='previewImg' src='"+ URL.createObjectURL(file) +"'></video></article>";
+			txt += "size: " + formatBytes(file.size) + " bytes <br><input type='submit' value='Submit'/><br></section><video onmouseover='this.play();' onmouseout='this.pause();' onclick='playMe(this)' loop class='previewImg' src='"+ URL.createObjectURL(file) +"'></video></article>";
 		  }
         }
       }
@@ -47,16 +47,25 @@ function formatBytes(a,b=2){if(!+a)return"0 Bytes";const c=0>b?0:b,d=Math.floor(
 </script>
 
 <script>
+function getTags(str) {
+	var cleanedStr =  str.split(/[ ,]+/).filter(Boolean);
+//	str.split(/[ ,]+/).filter(Boolean);
+	document.getElementById('inp').value = cleanedStr.splice(0,5).join(",");
+    return 
+}
+</script>
+<script>
 function removeExtension(filename){
     var lastDotPosition = filename.lastIndexOf(".");
     if (lastDotPosition === -1) return filename;
     else return filename.substr(0, lastDotPosition);
 }
-
+/*
 function getTags(str) {
 	document.getElementById('inp').value =  str.split(/[ ,]+/).filter(Boolean);
 	return str.split(/[ ,]+/).filter(Boolean);
 }
+*/
 function playMe(video) {
 //    video.play();
 	                    if (video.paused) {   // play the file, and display pause symbol 

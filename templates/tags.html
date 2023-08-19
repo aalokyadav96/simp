@@ -1,0 +1,15 @@
+{{template "head"}}
+{{template "header"}}
+
+<h1>{{.Qtag}}</h1>
+<hr>
+
+<div class="wraperdaper">
+   <div class="slidepanels">
+{{ range .Poster }}
+      <div id="cycler" class="cycler">
+		<a href="/v/{{.}}"><img src='/poster/{{.}}.png'></a>
+      </div>
+{{end}}
+   </div>
+</div>

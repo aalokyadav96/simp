@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"net/http"
-	//~ "log"
-	//~ "errors"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -18,11 +16,6 @@ func clearSession(response http.ResponseWriter) {
 	}
 	http.SetCookie(response, cookie)
 }
-
-// register page
-
-//const registerPage = ``
-// register handler
 
 func registerHandler(response http.ResponseWriter, request *http.Request, _ httprouter.Params) {
 	switch request.Method {
@@ -47,10 +40,18 @@ func registerHandler(response http.ResponseWriter, request *http.Request, _ http
 
 // login handler
 
+// index page
+const already = `<!DOCTYPE HTML><p>Already Logged In</p>`
+
 func loginHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	switch r.Method {
 	case "GET" : {
-		tmpl.ExecuteTemplate(w,"login.html",nil)}
+		if isLoggedIn(w,r) {
+			fmt.Fprintf(w, already)
+		} else {
+			tmpl.ExecuteTemplate(w,"login.html",nil)
+		}
+	}
 	case "POST" : {
 	name := r.FormValue("username")
 	pass := r.FormValue("password")
@@ -84,34 +85,10 @@ func logoutHandler(response http.ResponseWriter, request *http.Request, _ httpro
 	http.Redirect(response, request, "/", 302)
 }
 
-// index page
-//const indexPage = ``
 
 func indexPageHandler(response http.ResponseWriter, request *http.Request, _ httprouter.Params) {
 	tmpl.ExecuteTemplate(response,"login.html",nil)
-//	fmt.Fprintf(response, indexPage)
 }
-
-// internal page
-/*
-const internalPage = `
-<h1>Internal</h1>
-<hr>
-<small>User: %s</small>
-<form method="post" action="/logout">
-    <button type="submit">Logout</button>
-</form>
-`
-
-func internalPageHandler(response http.ResponseWriter, request *http.Request, _ httprouter.Params) {
-	userName := getUserName(request)
-	if userName != "" {
-		fmt.Fprintf(response, internalPage, userName)
-	} else {
-		http.Redirect(response, request, "/", 302)
-	}
-}
-*/
 
 func setSession(name string, w http.ResponseWriter) {
     cookie := http.Cookie{
@@ -128,14 +105,7 @@ func setSession(name string, w http.ResponseWriter) {
 
 func isLoggedIn(w http.ResponseWriter, r *http.Request) bool {
     cookie, err := r.Cookie("exampleCookie")
-    if err != nil {/*
-        switch {
-        case errors.Is(err, http.ErrNoCookie):
-            http.Error(w, "cookie not found", http.StatusBadRequest)
-        default:
-            log.Println(err)
-            http.Error(w, "server error", http.StatusInternalServerError)
-        }*/
+    if err != nil {
         return false
     }
 	fmt.Println(cookie.Value)

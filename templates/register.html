@@ -1,11 +1,144 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Sign Up on Gfyget</title>
+</head>
 
-<h1>Register</h1>
+<body>
+	<div class="signup_form">
+			<div class="header">Create Account</div>
+			<div class="content">
+				<p>or use your email for registration:</p>
+				<div class="login_box">
+				<form method="POST" action="/register">
+					<input type="text" name="username" value="" placeholder="Username">
+					<input type="text" name="password" value="" placeholder="Password">
+					<input type="text" name="email" value="" placeholder="Email">
+					<input type="submit" value="Submit" class="ui_btn b_lg b_primary">
+				</form>
+					<label for="check">
+						<input type="checkbox" id="check">
+						<span>I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.</span>
+					</label>
+			<div class="footer">
+				<div class="bar_tool">
+					<span class="ui_btn b_lg b_primary">Sign Up</span>
+					<span class="ui_btn b_lg b_primary">Log In</span>
+				</div>
+			</div>
+				</div>
+			</div>
+		</div>
+<style>
+    /* Design reference: https://dribbble.com/shots/11879454-Sign-Up-Form */
 
-<form method="POST" action="/register">
-<input type="text" name="username" value="" placeholder="Username">
-<input type="text" name="password" value="" placeholder="Password">
-<input type="text" name="email" value="" placeholder="Email">
-<input type="submit" value="Submit">
-</form>
-<p>
-<span>OR </span><a href="/login"> Login </a></p>
+/* basic */
+*,
+*:before,
+*:after {
+	box-sizing: border-box;
+}
+html,
+body {
+	height: 100%;
+}
+body {
+	font: 16px/1.2 "Roboto", sans-serif;
+	color: #333;
+}
+a {
+	color: #333;
+	text-decoration: underline;
+}
+a:hover {
+	text-decoration: none;
+}
+
+/* ui_btn */
+.ui_btn {
+	display: inline-block;
+	width: 100%;
+	text-align: center;
+	border-radius: 3px;
+	cursor: pointer;
+}
+.b_primary {
+    background: black;
+    color: white;
+    font-family: Georgia;
+    flex-grow: 1;
+    margin: 4px;
+}
+.b_lg {
+    padding: 8px;
+    font-size: 19px;
+    letter-spacing: 0.6;
+}
+
+/* formfield */
+input {
+    padding: 10px 12px;
+    font-size: 16px;
+    border: 2px solid #000;
+    margin: 16px 0;
+    background-color: #fff;
+}
+input[type="text"] {
+	width: 100%;
+}/*
+input[type="checkbox"] {
+	margin: 0;
+}*/
+input[type="checkbox"] + span {
+	font-size: 14px;
+}
+
+
+/* signup_form */
+.signup_form {
+	width: 340px;
+    margin: 0 auto;;
+}
+.signup_form .header {
+    color: black;
+    font-size: 29px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 8rem;
+}
+.signup_form .content {
+	margin-bottom: 16px;
+}
+.signup_form .content p {
+	font-size: 14px;
+	text-align: center;
+	margin-bottom: 16px;
+}
+.signup_form .content .login_type {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 16px;
+}
+.signup_form .content .login_type li {
+	margin: 0 8px;
+}
+.signup_form .content .login_box li + li {
+	margin-top: 8px;
+}
+
+.signup_form .footer .bar_tool {
+    font-size: 0;
+    display: flex;
+}
+.signup_form .footer .bar_tool li {
+	display: inline-block;
+	width: calc(50% - 4px);
+}
+.signup_form .footer .bar_tool li + li {
+	margin-left: 8px;
+}
+
+
+</style>
+</body></html>

@@ -13,7 +13,7 @@ var tmpl = template.Must(template.ParseGlob("templates/*.html"))
 const maxUploadSize = 10 * 1024 * 1024 // 10 mb
 const uploadPath = "./uploads"
 const streamPath = "./cmp"
-
+var postersDir = "./posters"
 var userpicPath = "./userpic"
 
 func main() {
@@ -21,6 +21,7 @@ func main() {
     router.GET("/", HasAuthCookie(UploadFileHandler))
 
 	router.GET("/search", Search)
+	router.GET("/tag/:tag", Tags)
 
 	router.GET("/login", loginHandler)
     router.POST("/login", loginHandler)
@@ -31,6 +32,7 @@ func main() {
 	//~ router.GET("/hello/:name", Hello)
     router.GET("/@:name", HasAuthCookie(ViewUser()))
     router.GET("/me", HasAuthCookie(Me()))
+    router.GET("/manage", HasAuthCookie(ManageContent()))
 	
 	router.GET("/upload", HasAuthCookie(UploadFileHandler))
 	router.POST("/upload", HasAuthCookie(UploadFileHandler))
@@ -38,11 +40,12 @@ func main() {
 	router.GET("/viewall", HasAuthCookie(ViewAllFiles))
 	router.DELETE("/del/:PostId", HasAuthCookie(DeleteFile))
 	
-	router.GET("/favicon.ico", Ignore)
+	router.GET("/fav/favicon.ico", Ignore)
 	
 	static := httprouter.New()
 	static.ServeFiles("/files/*filepath", http.Dir(streamPath))
 	static.ServeFiles("/giant/*filepath", http.Dir(uploadPath))
+	static.ServeFiles("/poster/*filepath", http.Dir(postersDir))
 	static.ServeFiles("/userpic/*filepath", http.Dir(userpicPath))
 	router.ServeFiles("/static/*filepath", http.Dir("static"))
 //	router.ServeFiles("/assets/*filepath", http.Dir("assets"))
