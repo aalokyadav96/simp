@@ -1,4 +1,4 @@
-module gfycat
+module gh
 
 go 1.18
 
