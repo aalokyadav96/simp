@@ -40,10 +40,14 @@ func HasAuthCookie(next httprouter.Handle) httprouter.Handle {
 		}
 	}
 }
+type Usr struct {
+	User string
+}
 
 func ViewUser() httprouter.Handle {
     return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-        fmt.Fprintf(w, "hello, %s!\n", ps.ByName("name"))
+		tmpl.ExecuteTemplate(w, "user.html", Usr{User: ps.ByName("name")})
+//        fmt.Fprintf(w, "hello, %s!\n", ps.ByName("name"))
     }
 }
 
@@ -95,7 +99,7 @@ func UploadFileHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Para
 			f := func(c rune) bool {
 			return !unicode.IsLetter(c) && !unicode.IsNumber(c)
 			}
-			titleArr := strings.FieldsFunc(title, f)
+			titleArr := strings.FieldsFunc(strings.ToLower(title), f)
 			fmt.Printf("Fields are: %q", titleArr)
 			fileSize := fileHeader.Size
 			fmt.Printf("File size (bytes): %v\n", fileSize)
@@ -145,16 +149,16 @@ func UploadFileHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Para
 				renderError(w, "CANT_WRITE_FILE", http.StatusInternalServerError)
 			}
 			//			ffmpeg -i %1 -filter:v scale=-2:640:flags=lanczos -c:a copy -pix_fmt yuv420p %1_lcz.mp4
-			FFConvert(fileName , fileEndings )
+			//~ FFConvert(fileName , fileEndings )
 			FFPoster(fileName , fileEndings )
 	//			var gif Gif{Title: , Author: , Tags: , Date: , URL: , Views: , Likes: }
 			t := time.Now()
 			var newstr string = title+":::"+tags+":::"+cook+":::"+string(t.Format("2006-01-02"))
 			rdxHset("gif",fileName,newstr)
-			fmt.Println(titleArr)
+			fmt.Println(titleArr)/*
 			for _,v := range titleArr {
-				rdxAppend("^"+v,fileName+":::")
-			}
+				rdxAppend("tags"+v,fileName+":::")
+			}*/
 			
 			for _,v := range strings.Split(tags,",") {
 				rdxAppend("tags"+v,fileName+":::")
@@ -166,22 +170,22 @@ func UploadFileHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Para
 	}
 }
 
-func FFConvert(fileName string, fileEndings string) {
-	getFrom := uploadPath + "/" + fileName + fileEndings
-	saveAs := streamPath + "/" + fileName + ".mp4"
-	cmd := exec.Command("ffmpeg", "-i", getFrom, "-filter:v", "scale=-2:640:flags=lanczos", "-c:a", "copy", "-pix_fmt", "yuv420p", saveAs)
-	err := cmd.Start()
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Printf("Waiting for command to finish...")
-	err = cmd.Wait()
-	log.Printf("Command finished with error: %v", err)
-}
+//~ func FFConvert(fileName string, fileEndings string) {
+	//~ getFrom := uploadPath + "/" + fileName + fileEndings
+	//~ saveAs := streamPath + "/" + fileName + ".mp4"
+	//~ cmd := exec.Command("ffmpeg", "-i", getFrom, "-filter:v", "scale=-2:640:flags=lanczos", "-c:a", "copy", "-pix_fmt", "yuv420p", saveAs)
+	//~ err := cmd.Start()
+	//~ if err != nil {
+		//~ log.Fatal(err)
+	//~ }
+	//~ log.Printf("Waiting for command to finish...")
+	//~ err = cmd.Wait()
+	//~ log.Printf("Command finished with error: %v", err)
+//~ }
 
 
 func FFPoster(fileName string, fileEndings string) {
-	getFrom := streamPath + "/" + fileName + ".mp4"
+	getFrom := uploadPath + "/" + fileName + ".mp4"
 	saveAs :=  "posters/" + fileName + ".png"
     out, err := exec.Command("ffprobe", "-v", "error", "-select_streams", "v:0", "-count_frames", "-show_entries", "stream=nb_read_frames", "-print_format", "default=nokey=1:noprint_wrappers=1",getFrom).Output()
     if err != nil {
@@ -227,8 +231,8 @@ func DeleteFile(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		extn := fileName[:len(fileName)-len(filepath.Ext(fileName))]
 		fmt.Println(streamPath + "/" + extn + ".mp4")
 		os.Remove(streamPath + "/" + extn + ".mp4")
-		fmt.Println(postersDir + "/" + fileName + ".png")
-		os.Remove(postersDir + "/" + fileName + ".png")
+		fmt.Println("./posters/" + extn + ".png")
+		os.Remove("./posters/" + extn + ".png")
 		XHRrespond(w, "Deleted")
 	}
 }
@@ -244,9 +248,9 @@ func Search(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	f := func(c rune) bool {
 		return !unicode.IsLetter(c) && !unicode.IsNumber(c)
 	}
-	for _,v := range strings.FieldsFunc(query, f) {
+	for _,v := range strings.FieldsFunc(strings.ToLower(query), f) {
 		fmt.Println(v)
-		redisRes,_ := rdxGet("^"+v)
+		redisRes,_ := rdxGet("tags"+v)
 		fmt.Println(redisRes)
 		res := strings.Split(redisRes,":::")
 		fmt.Println(res)
@@ -256,7 +260,7 @@ func Search(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		fmt.Println(resArray)
 	}
 	log.Println(resArray)
-	tmpl.ExecuteTemplate(w, "searchresults.html", Serp{Query:query,Poster:resArray})
+	tmpl.ExecuteTemplate(w, "searchresults.html", Serp{Query:query,Poster:resArray[:len(resArray)-1]})
 }
 
 type Posters struct {
@@ -267,7 +271,7 @@ type Posters struct {
 func Tags(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	res,_ := rdxGet("tags"+ps.ByName("tag"))
 	arr := strings.Split(res,":::")
-	tmpl.ExecuteTemplate(w, "tags.html", Posters{Poster:arr, Qtag:ps.ByName("tag")})
+	tmpl.ExecuteTemplate(w, "tags.html", Posters{Poster:arr[:len(arr)-1], Qtag:ps.ByName("tag")})
 }
 
 func SearchFiles(dir string) []string {

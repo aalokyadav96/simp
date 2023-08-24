@@ -45,6 +45,7 @@ func main() {
 	static := httprouter.New()
 	static.ServeFiles("/files/*filepath", http.Dir(streamPath))
 	static.ServeFiles("/giant/*filepath", http.Dir(uploadPath))
+	static.ServeFiles("/assets/*filepath", http.Dir("./assets"))
 	static.ServeFiles("/poster/*filepath", http.Dir(postersDir))
 	static.ServeFiles("/userpic/*filepath", http.Dir(userpicPath))
 	router.ServeFiles("/static/*filepath", http.Dir("static"))

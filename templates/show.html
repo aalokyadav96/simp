@@ -56,7 +56,7 @@
    </div>
    <div class="user-info">
       <div class="user-row">
-         <a class="profile-info-overview" href="/@ellygator">
+         <a class="profile-info-overview" href="/@{{.Author}}">
             <div class="profile-image small">
                <div class="image" style="background-image: url(&quot;/userpic/userpic.png&quot;);"></div>
             </div>
@@ -244,6 +244,9 @@ QS('.play-duration').addEventListener('mousedown', function (e) {
 				document.getElementsByTagName("video")[0].style.transform = "rotate(180deg) scale(1)";
 			}
 		};
+		if(e.key==="v" && vidd.playbackRate > 0.25 && hotkeysEnabled) {
+			video.paused ? video.play() : video.pause();
+		};
 		if(e.key==="h" && hotkeysEnabled) {
 			if (!flip) { 
 				document.getElementsByTagName("video")[0].style.transform = "scaleX(-1)";
@@ -264,15 +267,15 @@ document
       // Do Something, may be an 'Undo' operation
     }
 });
-*/
+*//*
 var video = document.getElementById('mainVid');
 
 document.onkeypress = function(e) {
-    if ( (e || window.event).keyCode === 32 /* enter key */ ) {
+    if ( (e || window.event).keyCode === 32  ) {
         video.paused ? video.play() : video.pause();
     }
 };
-
+*/
      </script>
 	 
      <script>

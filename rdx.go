@@ -4,23 +4,27 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 
-	gredis "github.com/redis/go-redis/v9"
+	"github.com/redis/go-redis/v9"
+    "github.com/joho/godotenv"
 )
 
+var redis_url = os.Getenv("REDIS_URL")
 
-var conn = gredis.NewClient(&gredis.Options{
-	Addr:     "localhost:6379",
-	Password: "", // no password set
-	DB:       0,  // use default DB
-})
+var conn = redis.NewClient(&redis.Options{
+        Addr:     redis_url,
+        Password: "", // no password set
+        DB:       0,  // use default DB
+    })
 
 
 func init() {
-	_, err := conn.Ping(context.Background()).Result()
-	if err != nil {
-		log.Fatal(err)
-	}
+  err := godotenv.Load()
+  if err != nil {
+    log.Fatal("Error loading .env file")
+  }
+
 }
 
 func rdxSet(key, value string) error {
